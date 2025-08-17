@@ -221,7 +221,7 @@ public static class PlayerRoleTextExtensions
         {
             if (insane.WasRevealed 
                 || (PlayerControl.LocalPlayer.TryGetModifier<DeathHandlerModifier>(out var handler) && !handler.DiedThisRound)
-                || isMeeting)
+                || (isMeeting && PlayerControl.LocalPlayer.Data.IsDead))
                 name += $"{TownOfUsColors.Insane.ToTextColor()} ?</color>";
         }
 

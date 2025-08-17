@@ -579,7 +579,8 @@ public static class MiscUtils
 
     public static IEnumerator CoFlash(Color color, float waitfor = 1f, float alpha = 0.3f, float delay = 0f)
     {
-        yield return new WaitForSeconds(delay);
+        if (delay != 0)
+            yield return new WaitForSeconds(delay);
 
         color.a = alpha;
         if (HudManager.InstanceExists && HudManager.Instance.FullScreen)

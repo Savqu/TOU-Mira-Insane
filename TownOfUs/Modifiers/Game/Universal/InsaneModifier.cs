@@ -1,6 +1,7 @@
 ﻿using BepInEx.Logging;
 using MiraAPI.GameOptions;
 using MiraAPI.Modifiers;
+using MiraAPI.Modifiers.ModifierDisplay;
 using MiraAPI.Roles;
 using MiraAPI.Utilities;
 using MiraAPI.Utilities.Assets;
@@ -101,8 +102,15 @@ public class InsaneModifier : BaseModifier
                 break;
         }
 
+        Logger.GlobalInstance.Info($"Insane {insaneToReveal.Player.Data.PlayerName} was revealed to {options.InsaneRevealsTo}!");
+
         if (insaneToReveal.WasRevealed && insaneToReveal.Player == PlayerControl.LocalPlayer)
         {
+            var modsTab = ModifierDisplayComponent.Instance;
+
+            if (modsTab != null)
+                modsTab.RefreshModifiers();
+
             Coroutines.Start(MiscUtils.CoFlash(TownOfUsColors.Insane, alpha: 0.05f));
         }
     }
