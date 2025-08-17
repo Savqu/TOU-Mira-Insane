@@ -10,6 +10,7 @@ using TMPro;
 using TownOfUs.Events;
 using TownOfUs.Modifiers;
 using TownOfUs.Modifiers.Game;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Modules;
 using TownOfUs.Roles;
 using TownOfUs.Roles.Neutral;
@@ -84,6 +85,13 @@ public static class EndGamePatches
             if (modifierCount != 0)
             {
                 playerRoleString.Append(TownOfUsPlugin.Culture, $" (");
+            }
+
+            if (playerControl.HasModifier<InsaneModifier>())
+            {
+                InsaneModifier insane = playerControl.GetModifier<InsaneModifier>();
+
+                playerRoleString.Append(TownOfUsPlugin.Culture, $"{TownOfUsColors.Insane.ToTextColor()}{insane.ModifierName}</color>, ");
             }
 
             foreach (var modifierName in modifierNames)

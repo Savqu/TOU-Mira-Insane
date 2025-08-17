@@ -2,6 +2,7 @@
 using MiraAPI.Modifiers;
 using MiraAPI.Roles;
 using MiraAPI.Utilities;
+using MiraAPI.Utilities.Assets;
 using Reactor.Networking.Attributes;
 using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
@@ -20,8 +21,14 @@ namespace TownOfUs.Modifiers.Game.Universal;
 public class InsaneModifier : BaseModifier
 {
     public override string ModifierName => "Insane";
+    public override string GetDescription() => "Your abilities cannot be trusted. Your modifiers and role attributes were turned against you!";
+    public override LoadableAsset<Sprite>? ModifierIcon => TouModifierIcons.Insane;
+
+    public override bool HideOnUi => !WasRevealed;
 
     public Dictionary<byte, string> PlayerIdToFakeSleuthRole = new Dictionary<byte, string>();
+
+    public bool WasRevealed = true;
 
     public void AddMysticDeathWithDelay(PlayerControl target, PlayerControl mystic)
     {

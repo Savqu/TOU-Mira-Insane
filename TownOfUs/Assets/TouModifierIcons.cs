@@ -40,6 +40,7 @@ public static class TouModifierIcons
     public static LoadableAsset<Sprite> SixthSense { get; } = new LoadableResourceAsset($"{iconPath}.SixthSense.png");
     public static LoadableAsset<Sprite> Sleuth { get; } = new LoadableResourceAsset($"{iconPath}.Sleuth.png");
     public static LoadableAsset<Sprite> Tiebreaker { get; } = new LoadableResourceAsset($"{iconPath}.Tiebreaker.png");
+    public static LoadableAsset<Sprite> Insane { get; } = new LoadableResourceAsset($"{iconPath}.Insane.png");
 
     public static LoadableAsset<Sprite> FirstRoundShield { get; } =
         new LoadableResourceAsset($"{iconPath}.FirstRoundShield.png");
