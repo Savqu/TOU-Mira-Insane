@@ -79,20 +79,20 @@ public class InsaneModifier : BaseModifier
     }
 
     [MethodRpc((uint)TownOfUsRpc.RevealInsane, SendImmediately = true)]
-    public static void RevealInsane(InsaneModifier insaneToReveal)
+    public static void RevealInsane(PlayerControl insanePlayer, InsaneModifier insaneToReveal)
     {
         InsaneOptions options = OptionGroupSingleton<InsaneOptions>.Instance;
 
         switch (options.InsaneRevealsTo)
         {
             case InsaneRevealsTo.Self:
-                if (insaneToReveal.Player != PlayerControl.LocalPlayer)
+                if (insanePlayer != PlayerControl.LocalPlayer)
                     break;
 
                 insaneToReveal.WasRevealed = true;
                 break;
             case InsaneRevealsTo.Others:
-                if (insaneToReveal.Player == PlayerControl.LocalPlayer)
+                if (insanePlayer == PlayerControl.LocalPlayer)
                     break;
 
                 insaneToReveal.WasRevealed = true;
@@ -102,8 +102,6 @@ public class InsaneModifier : BaseModifier
                 break;
         }
 
-        Logger.GlobalInstance.Info($"Insane {insaneToReveal.Player.Data.PlayerName} was revealed to {options.InsaneRevealsTo}!");
-
         if (insaneToReveal.WasRevealed && insaneToReveal.Player == PlayerControl.LocalPlayer)
         {
             var modsTab = ModifierDisplayComponent.Instance;
@@ -111,7 +109,7 @@ public class InsaneModifier : BaseModifier
             if (modsTab != null)
                 modsTab.RefreshModifiers();
 
-            Coroutines.Start(MiscUtils.CoFlash(TownOfUsColors.Insane, alpha: 0.05f));
+            Coroutines.Start(MiscUtils.CoFlash(TownOfUsColors.Insane));
         }
     }
 }

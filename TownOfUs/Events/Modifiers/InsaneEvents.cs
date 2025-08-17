@@ -73,6 +73,6 @@ public static class InsaneEvents
         if (!ev.Player.AllTasksCompleted())
             return;
 
-        InsaneModifier.RevealInsane(insane);
+        InsaneModifier.RevealInsane(ev.Player, insane);
     }
 }

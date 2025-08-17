@@ -79,7 +79,7 @@ public sealed class InsaneOptions : AbstractOptionGroup<InsaneModifier>
     [ModdedToggleOption("Insane Reveals on Tasks Done")]
     public bool InsaneRevealsOnTasksDone { get; set; } = false;
 
-    [ModdedEnumOption("Insane Reveals To", typeof(InsaneRevealsTo), ["Self", "Others", "Everyone"])]
+    [ModdedEnumOption("Insane Reveals To", typeof(InsaneRevealsTo), ["Self"])]
     public InsaneRevealsTo InsaneRevealsTo { get; set; } = InsaneRevealsTo.Self;
 
     [ModdedToggleOption("Detective Can Be Insane")]
