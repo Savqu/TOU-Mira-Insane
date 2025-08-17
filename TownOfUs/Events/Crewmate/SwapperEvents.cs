@@ -32,11 +32,6 @@ public static class SwapperEvents
             return;
         }
 
-        if (PlayerControl.LocalPlayer.IsHost())
-        {
-            InsaneModifier.RandomizeInsaneSwaps();
-        }
-
         Coroutines.Start(PerformSwaps());
     }
 

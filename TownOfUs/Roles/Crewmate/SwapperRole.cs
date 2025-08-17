@@ -1,11 +1,15 @@
 using System.Text;
+using Epic.OnlineServices;
 using Il2CppInterop.Runtime.Attributes;
 using MiraAPI.GameOptions;
 using MiraAPI.Modifiers;
 using MiraAPI.Patches.Stubs;
 using MiraAPI.Roles;
+using MiraAPI.Utilities;
 using Reactor.Networking.Attributes;
+using Reactor.Utilities.Extensions;
 using TownOfUs.Modifiers.Crewmate;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Modules;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Utilities;
@@ -152,6 +156,20 @@ public sealed class SwapperRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITouCrewR
             meetingMenu.Actives[voteArea.TargetPlayerId] = !meetingMenu.Actives[voteArea.TargetPlayerId];
         }
 
+        if (Player.HasModifier<InsaneModifier>())
+        {
+            if (Swap1 != null && Swap2 != null)
+            {
+                List<PlayerVoteArea> allAreas = MeetingHud.Instance.playerStates.ToList();
+
+                PlayerVoteArea newSwap1 = allAreas.Where(x => x.TargetPlayerId != Player.PlayerId).Random();
+                PlayerVoteArea newSwap2 = allAreas.Where(x => x.TargetPlayerId != Player.PlayerId && x != newSwap1).Random();
+
+                RpcSyncSwaps(Player, newSwap1?.TargetPlayerId ?? 255, newSwap2?.TargetPlayerId ?? 255);
+                return;
+            }
+        }
+
         RpcSyncSwaps(Player, Swap1?.TargetPlayerId ?? 255, Swap2?.TargetPlayerId ?? 255);
     }
 
@@ -160,6 +178,10 @@ public sealed class SwapperRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITouCrewR
     {
         var swapperRole = swapper.Data?.Role as SwapperRole;
         var areas = MeetingHud.Instance.playerStates.ToList();
+
+        if (swapper == PlayerControl.LocalPlayer)
+            return;
+
         swapperRole!.Swap1 = areas.Find(x => x.TargetPlayerId == swap1);
         swapperRole.Swap2 = areas.Find(x => x.TargetPlayerId == swap2);
     }

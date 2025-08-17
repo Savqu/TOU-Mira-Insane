@@ -32,26 +32,6 @@ public class InsaneModifier : BaseModifier
         Coroutines.Start(AddWithDelay());
     }
 
-    public static void RandomizeInsaneSwaps()
-    {
-        foreach (SwapperRole swapper in CustomRoleUtils.GetActiveRolesOfType<SwapperRole>())
-        {
-            if (!swapper.Player.HasModifier<InsaneModifier>())
-                continue;
-
-            if (swapper.Swap1 == null || swapper.Swap2 == null)
-                continue;
-
-            byte swap1 = swapper.Swap1.TargetPlayerId;
-            byte swap2 = swapper.Swap2.TargetPlayerId;
-
-            swap1 = Helpers.GetAlivePlayers().Random().PlayerId;
-            swap2 = Helpers.GetAlivePlayers().Where(x => x.PlayerId != swap1).Random().PlayerId;
-
-            SwapperRole.RpcSyncSwaps(swapper.Player, swap1, swap2);
-        }
-    }
-
     [MethodRpc((uint)TownOfUsRpc.SetInsane, SendImmediately = true)]
     public static void SetInsanePlayer(PlayerControl target)
     {
