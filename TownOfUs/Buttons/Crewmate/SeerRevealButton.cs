@@ -1,10 +1,12 @@
-using System.Text;
 using MiraAPI.GameOptions;
 using MiraAPI.Modifiers;
 using MiraAPI.Utilities;
 using MiraAPI.Utilities.Assets;
+using System.Text;
 using TownOfUs.Modifiers.Crewmate;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Modifiers.Impostor;
+using TownOfUs.Options.Modifiers.Universal;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Roles;
 using TownOfUs.Roles.Crewmate;
@@ -50,7 +52,24 @@ public sealed class SeerRevealButton : TownOfUsRoleButton<SeerRole, PlayerContro
         var options = OptionGroupSingleton<SeerOptions>.Instance;
         var possibleAlignment = new StringBuilder();
 
-        if (IsEvil(target))
+        bool isEvil = IsEvil(target);
+
+        if (PlayerControl.LocalPlayer.HasModifier<InsaneModifier>())
+        {
+            InsaneOptions insaneOptions = OptionGroupSingleton<InsaneOptions>.Instance;
+
+            switch (insaneOptions.InsaneSeerSees)
+            {
+                case InsaneSeerSees.Opposite:
+                    isEvil = !isEvil;
+                    break;
+                case InsaneSeerSees.Random:
+                    isEvil = UnityEngine.Random.value < 0.5f;
+                    break;
+            }
+        }
+
+        if (isEvil)
         {
             target.AddModifier<SeerEvilRevealModifier>();
             var possiblyGood = options.ShowCrewmateKillingAsRed ? "possibly" : string.Empty;
