@@ -3,6 +3,8 @@ using HarmonyLib;
 using MiraAPI.GameOptions;
 using MiraAPI.Modifiers;
 using MiraAPI.Roles;
+using Reactor.Utilities.Extensions;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Modifiers.Impostor;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Roles.Crewmate;
@@ -65,6 +67,22 @@ public sealed class BodyReport
 
     public static string ParseDetectiveReport(BodyReport br)
     {
+        if (br.Reporter.HasModifier<InsaneModifier>())
+        {
+            float randomKillTime = br.KillAge + UnityEngine.Random.Range(10, 30);
+
+            string[] possibleResponses =
+            [
+                $"Body Report: The corpse is too old to gain information from. (Killed {Math.Round(randomKillTime / 1000)}s ago)",
+                $"Body Report: The kill appears to have been a suicide! (Killed {Math.Round(randomKillTime / 1000)}s ago)",
+                $"Body Report: The killer appears to be a Neutral Role! (Killed {Math.Round(randomKillTime / 1000)}s ago)",
+                $"Body Report: The killer appears to be a Crewmate! (Killed {Math.Round(randomKillTime / 1000)}s ago)",
+                $"Body Report: The killer appears to be an Impostor! (Killed {Math.Round(randomKillTime / 1000)}s ago)"
+            ];
+
+            return possibleResponses.Random();
+        }
+
         if (br.KillAge > OptionGroupSingleton<DetectiveOptions>.Instance.DetectiveFactionDuration * 1000 && OptionGroupSingleton<DetectiveOptions>.Instance.DetectiveFactionDuration > 0)
         {
             return

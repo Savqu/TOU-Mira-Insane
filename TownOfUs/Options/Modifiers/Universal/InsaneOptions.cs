@@ -84,6 +84,8 @@ public sealed class InsaneOptions : AbstractOptionGroup<InsaneModifier>
 
     [ModdedToggleOption("Detective Can Be Insane")]
     public bool InsaneDetective { get; set; } = false;
+    [ModdedEnumOption("Insane Detective Sees", typeof(InsaneDetecitveSees), ["Opposite", "Random"])]
+    public InsaneDetecitveSees InsaneDetectiveSees { get; set; } = InsaneDetecitveSees.Opposite;
 
     [ModdedToggleOption("Seer Can Be Insane")]
     public bool InsaneSeer { get; set; } = false;
@@ -144,6 +146,12 @@ public enum InsaneRevealsTo
     Self,
     Others,
     Everyone
+}
+
+public enum InsaneDetecitveSees
+{
+    Opposite,
+    Random
 }
 
 public enum InsaneSeerSees
