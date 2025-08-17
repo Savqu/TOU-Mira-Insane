@@ -32,6 +32,25 @@ public class InsaneModifier : BaseModifier
         Coroutines.Start(AddWithDelay());
     }
 
+    [MethodRpc((uint)TownOfUsRpc.ReportAsAnotherPlayer, SendImmediately = true)]
+    public static void ForceAnotherPlayerToReport(PlayerControl forcer, PlayerControl player, NetworkedPlayerInfo target, bool baitReport = false)
+    {
+        player.ReportDeadBody(target);
+
+        if (player.AmOwner)
+        {
+            if (baitReport)
+            {
+                var notif = Helpers.CreateAndShowNotification(
+                    $"<b>{TownOfUsColors.Bait.ToTextColor()}{target.PlayerName} was a Bait, causing you to self report.</color></b>",
+                    Color.white, spr: TouModifierIcons.Bait.LoadAsset());
+
+                notif.Text.SetOutlineThickness(0.35f);
+                notif.transform.localPosition = new Vector3(0f, 1f, -20f);
+            }
+        }
+    }
+
     [MethodRpc((uint)TownOfUsRpc.SetInsane, SendImmediately = true)]
     public static void SetInsanePlayer(PlayerControl target)
     {
