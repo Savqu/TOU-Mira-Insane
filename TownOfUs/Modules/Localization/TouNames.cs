@@ -111,6 +111,7 @@ public enum TouNames
     Scout,
     Taskmaster,
     Torch,
+    Insane,
     // Other Modifiers
     FirstDeathShield,
     Scatter,

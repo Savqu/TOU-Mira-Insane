@@ -99,6 +99,7 @@ public static class TownOfUsColors
     public static Color Scout => new Color32(69, 97, 87, 255);
     public static Color Taskmaster => new Color32(148, 214, 237, 255);
     public static Color Torch => new Color32(255, 255, 153, 255);
+    public static Color Insane => Color.gray;
     // Neutral Modifiers
     public static Color Camouflaged => Color.gray;
 
