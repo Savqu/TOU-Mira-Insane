@@ -28,7 +28,8 @@ public class InsaneModifier : BaseModifier
 
     public Dictionary<byte, string> PlayerIdToFakeSleuthRole = new Dictionary<byte, string>();
 
-    public bool WasRevealed = true;
+    // Make it so CONFIRMED dead players have this set to true!
+    public bool WasRevealed = false;
 
     public void AddMysticDeathWithDelay(PlayerControl target, PlayerControl mystic)
     {
