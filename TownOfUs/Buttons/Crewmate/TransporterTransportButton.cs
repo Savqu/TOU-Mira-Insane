@@ -90,7 +90,7 @@ public sealed class TransporterTransportButton : TownOfUsRoleButton<TransporterR
                                 (x.moveable || x.inVent)
                                 && (!x.HasDied() || Helpers.GetBodyById(x.PlayerId))).Random().PlayerId;
 
-                            byte newPly2 = plr == PlayerControl.LocalPlayer ? plr.PlayerId : PlayerControl.AllPlayerControls.ToArray().Where(x =>
+                            byte newPly2 = plr == PlayerControl.LocalPlayer && newPly1 != plr.PlayerId ? plr.PlayerId : PlayerControl.AllPlayerControls.ToArray().Where(x =>
                                 (x.moveable || x.inVent)
                                 && (!x.HasDied() || Helpers.GetBodyById(x.PlayerId))
                                 && x.PlayerId != newPly1).Random().PlayerId;

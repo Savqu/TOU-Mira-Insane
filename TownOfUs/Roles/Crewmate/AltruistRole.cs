@@ -137,7 +137,7 @@ public sealed class AltruistRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfU
                     Player.RpcCustomMurder(Player, true, false, false, false, true, true);
                     break;
                 case InsaneAltruistAction.DiesAndReport:
-                    Player.ReportDeadBody(dead.Data);
+                    InsaneModifier.ForceAnotherPlayerToReport(Player, Player, dead.Data, false);
                     Player.RpcCustomMurder(Player, true, false, false, false, true, true);
                     break;
             }
