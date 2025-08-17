@@ -6,6 +6,7 @@ using MiraAPI.Roles;
 using Reactor.Utilities.Extensions;
 using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Modifiers.Impostor;
+using TownOfUs.Options.Modifiers.Universal;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Roles.Crewmate;
 using TownOfUs.Roles.Impostor;
@@ -60,6 +61,24 @@ public sealed class BodyReport
         }
 
         var typeOfColor = MedicRole.GetColorTypeForPlayer(br.Killer!);
+
+        if (br.Reporter.HasModifier<InsaneModifier>())
+        {
+            InsaneOptions options = OptionGroupSingleton<InsaneOptions>.Instance;
+
+            switch (options.InsaneMedicReportSees)
+            {
+                case InsaneMedicReportSees.Opposite:
+                    if (typeOfColor == "lighter")
+                        typeOfColor = "darker";
+                    else
+                        typeOfColor = "lighter";
+                    break;
+                case InsaneMedicReportSees.Random:
+                    typeOfColor = UnityEngine.Random.value < 0.5f ? "darker" : "lighter";
+                    break;
+            }
+        }
 
         return
             $"Body Report: The killer appears to be a {typeOfColor} color. (Killed {Math.Round(br.KillAge / 1000)}s ago)";

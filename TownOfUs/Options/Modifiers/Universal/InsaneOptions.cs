@@ -115,6 +115,8 @@ public sealed class InsaneOptions : AbstractOptionGroup<InsaneModifier>
     public bool InsaneMedic { get; set; } = false;
     [ModdedToggleOption("Insane Medic Protects")]
     public bool InsaneMedicProtects { get; set; } = true;
+    [ModdedEnumOption("Insane Medic Report Sees", typeof(InsaneMedicReportSees), ["Opposite", "Random"])]
+    public InsaneMedicReportSees InsaneMedicReportSees { get; set; } = InsaneMedicReportSees.Opposite;
 
     [ModdedToggleOption("Altruist Can Be Insane")]
     public bool InsaneAltruist { get; set; } = false;
@@ -155,6 +157,12 @@ public enum InsaneDetecitveSees
 }
 
 public enum InsaneSeerSees
+{
+    Opposite,
+    Random
+}
+
+public enum InsaneMedicReportSees
 {
     Opposite,
     Random
