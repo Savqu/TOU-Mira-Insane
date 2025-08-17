@@ -21,6 +21,8 @@ public class InsaneModifier : BaseModifier
 {
     public override string ModifierName => "Insane";
 
+    public Dictionary<byte, string> PlayerIdToFakeSleuthRole = new Dictionary<byte, string>();
+
     public void AddMysticDeathWithDelay(PlayerControl target, PlayerControl mystic)
     {
         IEnumerator AddWithDelay()
