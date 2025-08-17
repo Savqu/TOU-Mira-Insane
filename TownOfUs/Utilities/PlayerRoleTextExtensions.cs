@@ -219,7 +219,7 @@ public static class PlayerRoleTextExtensions
     {
         if (player.TryGetModifier<InsaneModifier>(out var insane))
         {
-            if (insane.WasRevealed)
+            if (insane.WasRevealed || (PlayerControl.LocalPlayer.TryGetModifier<DeathHandlerModifier>(out var handler) && !handler.DiedThisRound))
                 name += $"{TownOfUsColors.Insane} ?</color>";
         }
 

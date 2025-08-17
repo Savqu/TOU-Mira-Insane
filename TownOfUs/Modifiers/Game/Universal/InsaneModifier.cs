@@ -1,4 +1,5 @@
 ﻿using BepInEx.Logging;
+using MiraAPI.GameOptions;
 using MiraAPI.Modifiers;
 using MiraAPI.Roles;
 using MiraAPI.Utilities;
@@ -13,7 +14,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TownOfUs.Modifiers.Crewmate;
+using TownOfUs.Options.Modifiers.Universal;
 using TownOfUs.Roles.Crewmate;
+using TownOfUs.Utilities;
 using UnityEngine;
 
 namespace TownOfUs.Modifiers.Game.Universal;
@@ -72,5 +75,35 @@ public class InsaneModifier : BaseModifier
         if (TownOfUsPlugin.IsDevBuild) Logger.GlobalInstance.Info($"Recevied message to turn {target.Data.PlayerName} into Insane!");
 
         target.AddModifier<InsaneModifier>();
+    }
+
+    [MethodRpc((uint)TownOfUsRpc.RevealInsane, SendImmediately = true)]
+    public static void RevealInsane(InsaneModifier insaneToReveal)
+    {
+        InsaneOptions options = OptionGroupSingleton<InsaneOptions>.Instance;
+
+        switch (options.InsaneRevealsTo)
+        {
+            case InsaneRevealsTo.Self:
+                if (insaneToReveal.Player != PlayerControl.LocalPlayer)
+                    break;
+
+                insaneToReveal.WasRevealed = true;
+                break;
+            case InsaneRevealsTo.Others:
+                if (insaneToReveal.Player == PlayerControl.LocalPlayer)
+                    break;
+
+                insaneToReveal.WasRevealed = true;
+                break;
+            case InsaneRevealsTo.Everyone:
+                insaneToReveal.WasRevealed = true;
+                break;
+        }
+
+        if (insaneToReveal.WasRevealed && insaneToReveal.Player == PlayerControl.LocalPlayer)
+        {
+            Coroutines.Start(MiscUtils.CoFlash(TownOfUsColors.Insane, alpha: 0.05f));
+        }
     }
 }

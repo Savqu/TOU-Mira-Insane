@@ -1,6 +1,7 @@
 ﻿using BepInEx.Logging;
 using MiraAPI.Events;
 using MiraAPI.Events.Vanilla.Gameplay;
+using MiraAPI.Events.Vanilla.Player;
 using MiraAPI.GameOptions;
 using MiraAPI.Modifiers;
 using MiraAPI.Utilities;
@@ -53,5 +54,20 @@ public static class InsaneEvents
 
             possiblePlayers.Remove(player);
         }
+    }
+
+    [RegisterEvent]
+    public static void OnTaskCompleted(CompleteTaskEvent ev)
+    {
+        if (ev.Player != PlayerControl.LocalPlayer)
+            return;
+
+        if (!ev.Player.TryGetModifier<InsaneModifier>(out var insane))
+            return;
+
+        if (!ev.Player.AllTasksCompleted())
+            return;
+
+        InsaneModifier.RevealInsane(insane);
     }
 }

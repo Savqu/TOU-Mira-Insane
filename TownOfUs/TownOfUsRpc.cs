@@ -73,5 +73,6 @@ public enum TownOfUsRpc : uint
     AmbushPlayer,
     RetrainConfirm,
     SetInsane,
-    ReportAsAnotherPlayer
+    ReportAsAnotherPlayer,
+    RevealInsane
 }
