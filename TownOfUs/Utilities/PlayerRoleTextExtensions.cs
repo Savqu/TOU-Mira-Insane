@@ -215,12 +215,14 @@ public static class PlayerRoleTextExtensions
         return name;
     }
 
-    public static string UpdateInsaneSymbol(this string name, PlayerControl player)
+    public static string UpdateInsaneSymbol(this string name, PlayerControl player, bool isMeeting)
     {
         if (player.TryGetModifier<InsaneModifier>(out var insane))
         {
-            if (insane.WasRevealed || (PlayerControl.LocalPlayer.TryGetModifier<DeathHandlerModifier>(out var handler) && !handler.DiedThisRound))
-                name += $"{TownOfUsColors.Insane} ?</color>";
+            if (insane.WasRevealed 
+                || (PlayerControl.LocalPlayer.TryGetModifier<DeathHandlerModifier>(out var handler) && !handler.DiedThisRound)
+                || isMeeting)
+                name += $"{TownOfUsColors.Insane.ToTextColor()} ?</color>";
         }
 
         return name;

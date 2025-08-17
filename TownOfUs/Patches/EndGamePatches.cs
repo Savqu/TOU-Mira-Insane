@@ -78,20 +78,13 @@ public static class EndGamePatches
                 playerTeam = ModdedRoleTeams.Impostor;
             }
 
-            var modifiers = playerControl.GetModifiers<GameModifier>()
-                .Where(x => x is TouGameModifier || x is UniversalGameModifier);
+            var modifiers = playerControl.GetModifiers<BaseModifier>()
+                .Where(x => x is TouGameModifier || x is UniversalGameModifier || x is InsaneModifier);
             var modifierCount = modifiers.Count();
             var modifierNames = modifiers.Select(modifier => modifier.ModifierName);
             if (modifierCount != 0)
             {
                 playerRoleString.Append(TownOfUsPlugin.Culture, $" (");
-            }
-
-            if (playerControl.HasModifier<InsaneModifier>())
-            {
-                InsaneModifier insane = playerControl.GetModifier<InsaneModifier>();
-
-                playerRoleString.Append(TownOfUsPlugin.Culture, $"{TownOfUsColors.Insane.ToTextColor()}{insane.ModifierName}</color>, ");
             }
 
             foreach (var modifierName in modifierNames)

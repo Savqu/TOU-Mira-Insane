@@ -59,6 +59,11 @@ public static class InsaneEvents
     [RegisterEvent]
     public static void OnTaskCompleted(CompleteTaskEvent ev)
     {
+        InsaneOptions options = OptionGroupSingleton<InsaneOptions>.Instance;
+
+        if (!options.InsaneRevealsOnTasksDone)
+            return;
+
         if (ev.Player != PlayerControl.LocalPlayer)
             return;
 
