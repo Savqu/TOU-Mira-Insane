@@ -364,6 +364,7 @@ public static class HudManagerPatches
                 playerColor = playerColor.UpdateTargetColor(player);
                 playerName = playerName.UpdateTargetSymbols(player);
                 playerName = playerName.UpdateProtectionSymbols(player);
+                playerName = playerName.UpdateInsaneSymbol(player);
                 playerName = playerName.UpdateAllianceSymbols(player);
                 playerName = playerName.UpdateStatusSymbols(player);
 
@@ -579,6 +580,7 @@ public static class HudManagerPatches
                 playerColor = playerColor.UpdateTargetColor(player, !isVisible);
                 playerName = playerName.UpdateTargetSymbols(player, !isVisible);
                 playerName = playerName.UpdateProtectionSymbols(player, !isVisible);
+                playerName = playerName.UpdateInsaneSymbol(player);
                 playerName = playerName.UpdateAllianceSymbols(player, !isVisible);
                 playerName = playerName.UpdateStatusSymbols(player, !isVisible);
 

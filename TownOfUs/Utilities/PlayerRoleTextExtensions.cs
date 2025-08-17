@@ -3,6 +3,7 @@ using MiraAPI.Modifiers;
 using TownOfUs.Modifiers;
 using TownOfUs.Modifiers.Crewmate;
 using TownOfUs.Modifiers.Game.Alliance;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Modifiers.Impostor;
 using TownOfUs.Modifiers.Neutral;
 using TownOfUs.Modules;
@@ -209,6 +210,17 @@ public static class PlayerRoleTextExtensions
                 !hidden))
         {
             name += "<color=#D53F42> @</color>";
+        }
+
+        return name;
+    }
+
+    public static string UpdateInsaneSymbol(this string name, PlayerControl player)
+    {
+        if (player.TryGetModifier<InsaneModifier>(out var insane))
+        {
+            if (insane.WasRevealed)
+                name += $"{TownOfUsColors.Insane} ?</color>";
         }
 
         return name;
