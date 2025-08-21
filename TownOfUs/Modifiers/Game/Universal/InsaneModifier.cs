@@ -22,11 +22,16 @@ using UnityEngine;
 
 namespace TownOfUs.Modifiers.Game.Universal;
 
-public class InsaneModifier : BaseModifier
+public class InsaneModifier : BaseModifier, IWikiDiscoverable
 {
     public override string ModifierName => "Insane";
     public override string GetDescription() => "Your abilities cannot be trusted. Your modifiers and role attributes were turned against you!";
     public override LoadableAsset<Sprite>? ModifierIcon => TouModifierIcons.Insane;
+
+    public string GetAdvancedDescription()
+    {
+        return $"{ModifierName}'s behaviour changes depending on their role. Almost all abilities are twisted, causing chaos among unsuspecting Crewmates. While not as helpful, {ModifierName} players still win with their faction.";
+    }
 
     public override bool HideOnUi => !WasRevealed;
 

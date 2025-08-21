@@ -12,6 +12,7 @@ using Reactor.Localization;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using Reactor.Utilities;
+using Reactor.Utilities.Extensions;
 using TownOfUs.Patches.Misc;
 using ModCompatibility = TownOfUs.Modules.ModCompatibility;
 
@@ -76,6 +77,7 @@ public partial class TownOfUsPlugin : BasePlugin, IMiraPlugin
     public override void Load()
     {
         ReactorCredits.Register("Town Of Us: Mira", Version, IsDevBuild, ReactorCredits.AlwaysShow);
+        ReactorCredits.Register($"Insane Modifier by GBN", string.Empty, IsDevBuild, ReactorCredits.AlwaysShow);
         LocalizationManager.Register(new TaskProvider());
 
         TouAssets.Initialize();
