@@ -72,7 +72,7 @@ public sealed class InsaneOptions : AbstractOptionGroup<InsaneModifier>
         return (role != null && eligibleRolesAndModifiers.Contains(role.RoleName)) || modifiers.Any(x => eligibleRolesAndModifiers.Contains(x.ModifierName));
     }
 
-    public override string GroupName => TouLocale.Get(TouNames.Insane, "Insane");
+    public override string GroupName => "Insane";
     public override uint GroupPriority => 29;
     public override Color GroupColor => TownOfUsColors.Insane;
 
