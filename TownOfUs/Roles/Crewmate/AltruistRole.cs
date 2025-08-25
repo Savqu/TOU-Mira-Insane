@@ -1,21 +1,24 @@
-using System.Collections;
-using System.Text;
 using Il2CppInterop.Runtime.Attributes;
 using MiraAPI.Events;
 using MiraAPI.GameOptions;
 using MiraAPI.Hud;
 using MiraAPI.Modifiers;
 using MiraAPI.Modifiers.Types;
+using MiraAPI.Networking;
 using MiraAPI.Patches.Stubs;
 using MiraAPI.Roles;
 using Reactor.Networking.Attributes;
 using Reactor.Utilities;
+using System.Collections;
+using System.Text;
 using TownOfUs.Buttons.Crewmate;
 using TownOfUs.Events.TouEvents;
 using TownOfUs.Modifiers.Crewmate;
 using TownOfUs.Modifiers.Game.Alliance;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Modules;
 using TownOfUs.Modules.Anims;
+using TownOfUs.Options.Modifiers.Universal;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Utilities;
 using UnityEngine;
@@ -120,6 +123,25 @@ public sealed class AltruistRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfU
 
         Player.moveable = false;
         Player.NetTransform.Halt();
+
+        if (PlayerControl.LocalPlayer == Player && Player.HasModifier<InsaneModifier>())
+        {
+            InsaneOptions options = OptionGroupSingleton<InsaneOptions>.Instance;
+
+            switch (options.InsaneAltruistAbility)
+            {
+                case InsaneAltruistAction.Report:
+                    Player.CmdReportDeadBody(dead.Data);
+                    break;
+                case InsaneAltruistAction.Dies:
+                    Player.RpcCustomMurder(Player, true, false, false, false, true, true);
+                    break;
+                case InsaneAltruistAction.DiesAndReport:
+                    InsaneModifier.ForceAnotherPlayerToReport(Player, Player, dead.Data, false);
+                    Player.RpcCustomMurder(Player, true, false, false, false, true, true);
+                    break;
+            }
+        }
 
         var body = FindObjectsOfType<DeadBody>()
             .FirstOrDefault(b => b.ParentId == dead.PlayerId);

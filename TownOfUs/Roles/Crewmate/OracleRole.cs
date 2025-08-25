@@ -10,6 +10,7 @@ using Reactor.Networking.Attributes;
 using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
 using TownOfUs.Modifiers.Crewmate;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Utilities;
 using TownOfUs.Utilities.Appearances;
@@ -80,13 +81,13 @@ public sealed class OracleRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfUsR
             return;
         }
 
-        var report = BuildReport(confessing);
+        var report = BuildReport(confessing, Player);
 
         var title = $"<color=#{TownOfUsColors.Oracle.ToHtmlStringRGBA()}>Oracle Confession</color>";
         MiscUtils.AddFakeChat(confessing.Data, title, report, false, true);
     }
 
-    public static string BuildReport(PlayerControl player)
+    public static string BuildReport(PlayerControl player, PlayerControl oracle)
     {
         if (player.HasDied())
         {
@@ -114,6 +115,11 @@ public sealed class OracleRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfUsR
                                                                                        options
                                                                                            .ShowNeutralBenignAsEvil)))
             .ToList();
+
+        if (oracle.HasModifier<InsaneModifier>())
+        {
+            evilPlayers = Helpers.GetAlivePlayers().Where(x => x != oracle).ToList();
+        }
 
         if (evilPlayers.Count == 0)
         {

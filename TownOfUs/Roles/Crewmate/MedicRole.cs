@@ -12,6 +12,7 @@ using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
 using TownOfUs.Buttons.Crewmate;
 using TownOfUs.Modifiers.Crewmate;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Modules;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Utilities;
@@ -305,7 +306,17 @@ public sealed class MedicRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfUsRo
 
     public static void DangerAnim()
     {
-        Coroutines.Start(MiscUtils.CoFlash(new Color(0f, 0.5f, 0f, 1f)));
+        float delay = 0;
+
+        if (PlayerControl.LocalPlayer.Data.Role is MedicRole)
+        {
+            if (PlayerControl.LocalPlayer.HasModifier<InsaneModifier>())
+            {
+                delay = UnityEngine.Random.Range(5, 10);
+            }
+        }
+
+        Coroutines.Start(MiscUtils.CoFlash(new Color(0f, 0.5f, 0f, 1f), delay: delay));
     }
 
     public static void OnRoundStart()

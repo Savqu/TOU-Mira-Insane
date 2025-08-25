@@ -367,6 +367,7 @@ public static class HudManagerPatches
                 playerColor = playerColor.UpdateTargetColor(player);
                 playerName = playerName.UpdateTargetSymbols(player);
                 playerName = playerName.UpdateProtectionSymbols(player);
+                playerName = playerName.UpdateInsaneSymbol(player, true);
                 playerName = playerName.UpdateAllianceSymbols(player);
                 playerName = playerName.UpdateStatusSymbols(player);
 
@@ -439,15 +440,25 @@ public static class HudManagerPatches
                         var roleWhenAlive = player.GetRoleWhenAlive();
                         color = roleWhenAlive.TeamColor;
 
-                        roleName = $"<size=80%>{color.ToTextColor()}{roleWhenAlive.NiceName}</color></size>";
-                        if (PlayerControl.LocalPlayer.HasDied() && !player.HasModifier<VampireBittenModifier>() && roleWhenAlive is VampireRole)
+                        if (SleuthModifier.SleuthVisibilityFlag(player) && PlayerControl.LocalPlayer.HasModifier<InsaneModifier>())
                         {
-                            roleName += "<size=80%><color=#FFFFFF> (<color=#A22929>OG</color>)</color></size>";
+                            InsaneModifier modifier = PlayerControl.LocalPlayer.GetModifier<InsaneModifier>();
+
+                            roleName = $"<size=80%>{modifier.PlayerIdToFakeSleuthRole[player.PlayerId]}</size>";
                         }
-                        if (player.HasModifier<AmbassadorRetrainedModifier>() && player.IsImpostor())
+                        else
                         {
-                            roleName += "<size=80%><color=#FFFFFF> (<color=#D63F42>Retrained</color>)</color></size>";
+                            roleName = $"<size=80%>{color.ToTextColor()}{roleWhenAlive.NiceName}</color></size>";
+                            if (PlayerControl.LocalPlayer.HasDied() && !player.HasModifier<VampireBittenModifier>() && roleWhenAlive is VampireRole)
+                            {
+                                roleName += "<size=80%><color=#FFFFFF> (<color=#A22929>OG</color>)</color></size>";
+                            }
+                            if (player.HasModifier<AmbassadorRetrainedModifier>() && player.IsImpostor())
+                            {
+                                roleName += "<size=80%><color=#FFFFFF> (<color=#D63F42>Retrained</color>)</color></size>";
+                            }
                         }
+
                     }
                     if (PlayerControl.LocalPlayer.HasDied() && player.TryGetModifier<DeathHandlerModifier>(out var deathMod))
                     {
@@ -572,6 +583,7 @@ public static class HudManagerPatches
                 playerColor = playerColor.UpdateTargetColor(player, !isVisible);
                 playerName = playerName.UpdateTargetSymbols(player, !isVisible);
                 playerName = playerName.UpdateProtectionSymbols(player, !isVisible);
+                playerName = playerName.UpdateInsaneSymbol(player, false);
                 playerName = playerName.UpdateAllianceSymbols(player, !isVisible);
                 playerName = playerName.UpdateStatusSymbols(player, !isVisible);
 
@@ -635,14 +647,23 @@ public static class HudManagerPatches
                         var roleWhenAlive = player.GetRoleWhenAlive();
                         color = roleWhenAlive.TeamColor;
 
-                        roleName = $"<size=80%>{color.ToTextColor()}{roleWhenAlive.NiceName}</color></size>";
-                        if (!player.HasModifier<VampireBittenModifier>() && roleWhenAlive is VampireRole)
+                        if (SleuthModifier.SleuthVisibilityFlag(player) && PlayerControl.LocalPlayer.HasModifier<InsaneModifier>())
                         {
-                            roleName += "<size=80%><color=#FFFFFF> (<color=#A22929>OG</color>)</color></size>";
+                            InsaneModifier modifier = PlayerControl.LocalPlayer.GetModifier<InsaneModifier>();
+
+                            roleName = $"<size=80%>{modifier.PlayerIdToFakeSleuthRole[player.PlayerId]}</size>";
                         }
-                        if (player.HasModifier<AmbassadorRetrainedModifier>() && player.IsImpostor())
+                        else
                         {
-                            roleName += "<size=80%><color=#FFFFFF> (<color=#D63F42>Retrained</color>)</color></size>";
+                            roleName = $"<size=80%>{color.ToTextColor()}{roleWhenAlive.NiceName}</color></size>";
+                            if (PlayerControl.LocalPlayer.HasDied() && !player.HasModifier<VampireBittenModifier>() && roleWhenAlive is VampireRole)
+                            {
+                                roleName += "<size=80%><color=#FFFFFF> (<color=#A22929>OG</color>)</color></size>";
+                            }
+                            if (player.HasModifier<AmbassadorRetrainedModifier>() && player.IsImpostor())
+                            {
+                                roleName += "<size=80%><color=#FFFFFF> (<color=#D63F42>Retrained</color>)</color></size>";
+                            }
                         }
                     }
                     if (PlayerControl.LocalPlayer.HasDied() && isVisible && player.TryGetModifier<DeathHandlerModifier>(out var deathMod))

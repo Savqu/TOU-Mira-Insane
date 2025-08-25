@@ -39,6 +39,11 @@ public static class TiebreakerEvents
         var player = tieBreakers.Random();
         var vote = votes.FirstOrDefault(x => x.Voter == player!.PlayerId);
 
+        if (player.HasModifier<InsaneModifier>())
+        {
+            vote = votes.FirstOrDefault(x => x.Voter != player!.PlayerId);
+        }
+
         if (vote == default)
         {
             return;

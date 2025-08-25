@@ -1,13 +1,16 @@
 ﻿using System.Text;
 using Il2CppInterop.Runtime.Attributes;
 using MiraAPI.GameOptions;
+using MiraAPI.Modifiers;
 using MiraAPI.Patches.Stubs;
 using MiraAPI.Roles;
 using MiraAPI.Utilities;
 using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Modules;
 using TownOfUs.Modules.Components;
+using TownOfUs.Options.Modifiers.Universal;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Utilities;
 using UnityEngine;
@@ -78,7 +81,24 @@ public sealed class DetectiveRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOf
 
     public void ExaminePlayer(PlayerControl player)
     {
-        if (InvestigatedPlayers.Contains(player.PlayerId))
+        bool result = InvestigatedPlayers.Contains(player.PlayerId);
+
+        if (Player.HasModifier<InsaneModifier>())
+        {
+            InsaneOptions options = OptionGroupSingleton<InsaneOptions>.Instance;
+
+            switch (options.InsaneDetectiveSees)
+            {
+                case InsaneDetecitveSees.Opposite:
+                    result = !result;
+                    break;
+                case InsaneDetecitveSees.Random:
+                    result = UnityEngine.Random.value < 0.5f;
+                    break;
+            }
+        }
+
+        if (result)
         {
             Coroutines.Start(MiscUtils.CoFlash(Color.red));
 

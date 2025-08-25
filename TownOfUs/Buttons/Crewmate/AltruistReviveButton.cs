@@ -59,6 +59,9 @@ public sealed class AltruistReviveButton : TownOfUsRoleButton<AltruistRole>
             var player = MiscUtils.PlayerById(playerId);
             if (player != null)
             {
+                if (PlayerControl.LocalPlayer.Data.IsDead)
+                    break;
+
                 if (player.IsLover() && OptionGroupSingleton<LoversOptions>.Instance.BothLoversDie)
                 {
                     var other = player.GetModifier<LoverModifier>()!.GetOtherLover;
