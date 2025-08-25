@@ -21,7 +21,7 @@ namespace TownOfUs;
 /// <summary>
 ///     Plugin class for Town of Us.
 /// </summary>
-[BepInAutoPlugin("auavengers.tou.mira", "Town of Us Mira")]
+[BepInAutoPlugin("gbn.tou.mira.insane", "Town of Us Mira Insane")]
 [BepInProcess("Among Us.exe")]
 [BepInDependency(ReactorPlugin.Id)]
 [BepInDependency(MiraApiPlugin.Id)]
