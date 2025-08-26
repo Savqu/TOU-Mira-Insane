@@ -86,9 +86,9 @@ public partial class TownOfUsPlugin : BasePlugin, IMiraPlugin
         IL2CPPChainloader.Instance.Finished +=
             ModNewsFetcher.CheckForNews; // Checks for mod announcements after everything is loaded to avoid Epic Games crashing
 
-        /*var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(TownOfUsPlugin))!.Location) + "\\touhats.catalog";
+        var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(TownOfUsPlugin))!.Location) + "\\touhats.catalog";
         AddressablesLoader.RegisterCatalog(path);
-        AddressablesLoader.RegisterHats("touhats");*/
+        AddressablesLoader.RegisterHats("touhats");
 
         DeadSeeGhosts = Config.Bind("LocalSettings", "DeadSeeGhosts", true, "If you see other ghosts when dead");
         ShowShieldHud = Config.Bind("LocalSettings", "ShowShieldHud", true,
