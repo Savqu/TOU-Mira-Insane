@@ -1,39 +1,42 @@
-name: Build Android (Mira DLL)
+name: Build TownOfUs Mira
 
 on:
   push:
-    branches: [ android ]
-  workflow_dispatch:
+    branches:
+      - main
+      - android
+  pull_request:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8 (C# 12)
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.x'
 
-      - name: Restore
-        run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore TownOfUs.csproj
 
-      - name: Build (force output to /artifacts)
+      - name: Build DLL
         run: |
-          mkdir -p artifacts
-          dotnet build TownOfUs/TownOfUsMira.csproj \
-            --no-restore -c Release \
-            -p:OutDir=${{ github.workspace }}/artifacts/
-          echo "=== Built files ==="
-          find artifacts -type f -maxdepth 2 -print
+          if [ "${GITHUB_REF##*/}" = "android" ]; then
+            echo "📱 Building for Android..."
+            dotnet build TownOfUs.csproj -c Release -f net8.0-android
+          else
+            echo "💻 Building for PC..."
+            dotnet build TownOfUs.csproj -c Release -f netstandard2.1
+          fi
 
       - name: Upload artifact
-        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Mira-Android
-          path: artifacts/**
-          retention-days: 7
+          name: TownOfUs-Mira
+          path: |
+            **/bin/Release/netstandard2.1/*.dll
+            **/bin/Release/net8.0-android/*.dll
