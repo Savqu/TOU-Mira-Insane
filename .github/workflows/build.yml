@@ -1,4 +1,4 @@
-name: Build
+name: Build Android DLL
 
 on:
   push:
@@ -12,8 +12,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      DOTNET_SKIP_WORKLOAD_INTEGRITY_CHECK: true
+
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup .NET
@@ -27,14 +30,11 @@ jobs:
       - name: Build
         run: dotnet build TownOfUs/TownOfUsMira.csproj --configuration Release --no-restore
 
-      - name: Publish artifact
+      - name: Publish artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: TOU-Mira-Android
-          path: TownOfUs/bin/Release/netstandard2.1/        with:
-          name: TOU-Mira-Android
-          path: TOU-Mira-Android.zip      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+          name: TOU-Mira-Insane-Android
+          path: TownOfUs/bin/Release/netstandard2.1/*.dll        uses: actions/upload-artifact@v4
         with:
           name: TOU-Mira-Android
           path: TownOfUs/bin/Release/net8.0/TOU-Mira-Android.zip        with:
