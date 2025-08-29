@@ -2,9 +2,11 @@ name: Build
 
 on:
   push:
-    branches: [ android ]
+    branches:
+      - android
   pull_request:
-    branches: [ android ]
+    branches:
+      - android
 
 jobs:
   build:
@@ -12,24 +14,24 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
+      - name: Install Android workload
+        run: dotnet workload install android --skip-manifest-update
+
       - name: Restore dependencies
         run: dotnet restore TownOfUs/TownOfUsMira.csproj
 
-      - name: Build
+      - name: Build project
         run: dotnet build TownOfUs/TownOfUsMira.csproj --configuration Release --no-restore
 
-      - name: Publish
-        run: dotnet publish TownOfUs/TownOfUsMira.csproj --configuration Release --no-build -o out
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Publish artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: TownOfUsMira
-          path: out
+          name: TOU-Mira-Android
+          path: TownOfUs/bin/Release/net8.0/*
