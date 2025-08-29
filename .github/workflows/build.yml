@@ -1,0 +1,34 @@
+name: Build DLL
+
+on:
+  push:
+    branches: [ android ]
+  pull_request:
+    branches: [ android ]
+  workflow_dispatch:   # żebyś mógł uruchomić ręcznie
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore TownOfUs-Mira.sln
+
+      - name: Build
+        run: dotnet build TownOfUs-Mira.sln -c Release --no-restore
+
+      - name: Upload DLLs
+        uses: actions/upload-artifact@v3
+        with:
+          name: built-dlls
+          path: |
+            **/bin/Release/**/*.dll
