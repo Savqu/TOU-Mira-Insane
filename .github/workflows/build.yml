@@ -30,8 +30,13 @@ jobs:
       - name: Build project
         run: dotnet build TownOfUs/TownOfUsMira.csproj --configuration Release --no-restore
 
+      - name: Zip output DLL
+        run: |
+          cd TownOfUs/bin/Release/net8.0
+          zip TOU-Mira-Android.zip *.dll
+
       - name: Publish artifact
         uses: actions/upload-artifact@v4
         with:
           name: TOU-Mira-Android
-          path: TownOfUs/bin/Release/net8.0/*          path: TownOfUs/bin/Release/net8.0/*
+          path: TownOfUs/bin/Release/net8.0/TOU-Mira-Android.zip          path: TownOfUs/bin/Release/net8.0/*          path: TownOfUs/bin/Release/net8.0/*
