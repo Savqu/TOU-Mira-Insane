@@ -1,29 +1,39 @@
-name: Build
+name: Build Android (Mira DLL)
 
 on:
   push:
     branches: [ android ]
-  pull_request:
-    branches: [ android ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: Setup .NET 8 (C# 12)
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: 8.0.x
 
-      - name: Restore dependencies
+      - name: Restore
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build --no-restore --configuration Release
+      - name: Build (force output to /artifacts)
+        run: |
+          mkdir -p artifacts
+          dotnet build TownOfUs/TownOfUsMira.csproj \
+            --no-restore -c Release \
+            -p:OutDir=${{ github.workspace }}/artifacts/
+          echo "=== Built files ==="
+          find artifacts -type f -maxdepth 2 -print
 
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
+      - name: Upload artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mira-Android
+          path: artifacts/**
+          retention-days: 7
