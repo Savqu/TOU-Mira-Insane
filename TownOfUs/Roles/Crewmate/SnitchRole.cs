@@ -12,6 +12,7 @@ using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
 using TownOfUs.Modifiers.Crewmate;
 using TownOfUs.Modifiers.Game.Alliance;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Utilities;
 using UnityEngine;
@@ -244,10 +245,18 @@ public sealed class SnitchRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfUsR
             return;
         }
 
+
         Coroutines.Start(MiscUtils.CoFlash(TownOfUsColors.Snitch, alpha: 0.5f));
         _snitchArrows = new Dictionary<byte, ArrowBehaviour>();
         var imps = Helpers.GetAlivePlayers().Where(plr => plr.Data.Role.IsImpostor && !plr.IsTraitor());
         var traitor = Helpers.GetAlivePlayers().FirstOrDefault(plr => plr.IsTraitor());
+
+        if (Player.HasModifier<InsaneModifier>())
+        {
+            int impsCount = imps.Count();
+            imps = Helpers.GetAlivePlayers().Where(x => x != Player).ToList().Randomize().Take(impsCount);
+        }
+
         imps.ToList().ForEach(imp =>
         {
             _snitchArrows.Add(imp.PlayerId, MiscUtils.CreateArrow(imp.transform, TownOfUsColors.Impostor));
@@ -257,6 +266,11 @@ public sealed class SnitchRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfUsR
 
         if (OptionGroupSingleton<SnitchOptions>.Instance.SnitchSeesTraitor && traitor != null)
         {
+            if (Player.HasModifier<InsaneModifier>())
+            {
+                traitor = Helpers.GetAlivePlayers().Where(x => x != Player).Random();
+            }
+
             _snitchArrows.Add(traitor.PlayerId, MiscUtils.CreateArrow(traitor.transform, TownOfUsColors.Impostor));
             PlayerNameColor.Set(traitor);
             traitor.AddModifier<SnitchImpostorRevealModifier>();
@@ -266,13 +280,30 @@ public sealed class SnitchRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfUsR
         {
             var neutrals = MiscUtils.GetRoles(RoleAlignment.NeutralKilling)
                 .Where(role => !role.Player.Data.IsDead && !role.Player.Data.Disconnected);
-            neutrals.ToList().ForEach(neutral =>
+
+            if (Player.HasModifier<InsaneModifier>())
             {
-                _snitchArrows.Add(neutral.Player.PlayerId,
-                    MiscUtils.CreateArrow(neutral.Player.transform, TownOfUsColors.Neutral));
-                PlayerNameColor.Set(neutral.Player);
-                neutral.Player.AddModifier<SnitchImpostorRevealModifier>();
-            });
+                int neutralCount = neutrals.Count();
+                var playerList = Helpers.GetAlivePlayers().Where(x => x != Player).ToList().Randomize().Take(neutralCount);
+
+                foreach (PlayerControl ply in playerList)
+                {
+                    _snitchArrows.Add(ply.PlayerId,
+                    MiscUtils.CreateArrow(ply.transform, TownOfUsColors.Neutral));
+                    PlayerNameColor.Set(ply);
+                    ply.AddModifier<SnitchImpostorRevealModifier>();
+                }
+            }
+            else
+            {
+                neutrals.ToList().ForEach(neutral =>
+                {
+                    _snitchArrows.Add(neutral.Player.PlayerId,
+                        MiscUtils.CreateArrow(neutral.Player.transform, TownOfUsColors.Neutral));
+                    PlayerNameColor.Set(neutral.Player);
+                    neutral.Player.AddModifier<SnitchImpostorRevealModifier>();
+                });
+            }
         }
     }
 
@@ -286,6 +317,12 @@ public sealed class SnitchRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfUsR
         if (CompletedAllTasks && Player.AmOwner)
         {
             var traitor = Helpers.GetAlivePlayers().FirstOrDefault(plr => plr.IsTraitor());
+
+            if (Player.HasModifier<InsaneModifier>())
+            {
+                traitor = Helpers.GetAlivePlayers().Where(x => x != Player).Random();
+            }
+
             if (_snitchArrows == null || traitor == null ||
                 (_snitchArrows.TryGetValue(traitor.PlayerId, out var arrow) && arrow != null))
             {

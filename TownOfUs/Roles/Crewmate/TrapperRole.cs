@@ -1,11 +1,16 @@
 ﻿using System.Text;
 using AmongUs.GameOptions;
+using Epic.OnlineServices;
 using Il2CppInterop.Runtime.Attributes;
 using MiraAPI.GameOptions;
+using MiraAPI.Modifiers;
 using MiraAPI.Patches.Stubs;
 using MiraAPI.Roles;
+using MiraAPI.Utilities;
 using Reactor.Utilities.Extensions;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Modules;
+using TownOfUs.Options.Modifiers.Universal;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Utilities;
 using UnityEngine;
@@ -92,6 +97,27 @@ public sealed class TrapperRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfUs
             var message = new StringBuilder("Roles caught in your trap:\n");
 
             TrappedPlayers.Shuffle();
+
+            if (Player.HasModifier<InsaneModifier>())
+            {
+                int trappedCount = TrappedPlayers.Count();
+
+                InsaneOptions options = OptionGroupSingleton<InsaneOptions>.Instance;
+
+                var playerList = PlayerControl.AllPlayerControls.ToArray().Where(x => x != Player).ToList().Randomize();
+
+                TrappedPlayers.Clear();
+                foreach (PlayerControl ctrl in playerList)
+                {
+                    if (TrappedPlayers.Count() >= trappedCount)
+                        break;
+
+                    if (!options.InsaneTrapperSeesDead && ctrl.Data.IsDead)
+                        continue;
+
+                    TrappedPlayers.Add(ctrl.Data.Role);
+                }
+            }
 
             foreach (var role in TrappedPlayers)
             {

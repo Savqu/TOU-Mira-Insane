@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Text;
+using Epic.OnlineServices;
 using Il2CppInterop.Runtime.Attributes;
 using MiraAPI.GameOptions;
+using MiraAPI.Modifiers;
 using MiraAPI.Patches.Stubs;
 using MiraAPI.Roles;
+using MiraAPI.Utilities;
 using Reactor.Networking.Attributes;
 using Reactor.Utilities;
+using Reactor.Utilities.Extensions;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Options.Roles.Crewmate;
 using TownOfUs.Utilities;
 using UnityEngine;
@@ -144,6 +149,11 @@ public sealed class AurialRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITownOfUsR
 
         if (player.AmOwner)
         {
+            if (player.HasModifier<InsaneModifier>())
+            {
+                source = Helpers.GetAlivePlayers().Where(x => x != player).Random();
+            }
+
             Coroutines.Start(aurial.Sense(source));
         }
     }

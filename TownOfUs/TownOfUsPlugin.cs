@@ -12,6 +12,7 @@ using Reactor.Localization;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using Reactor.Utilities;
+using Reactor.Utilities.Extensions;
 using TownOfUs.Patches.Misc;
 using ModCompatibility = TownOfUs.Modules.ModCompatibility;
 
@@ -20,7 +21,7 @@ namespace TownOfUs;
 /// <summary>
 ///     Plugin class for Town of Us.
 /// </summary>
-[BepInAutoPlugin("auavengers.tou.mira", "Town of Us Mira")]
+[BepInAutoPlugin("gbn.tou.mira.insane", "Town of Us Mira Insane")]
 [BepInProcess("Among Us.exe")]
 [BepInDependency(ReactorPlugin.Id)]
 [BepInDependency(MiraApiPlugin.Id)]
@@ -76,6 +77,7 @@ public partial class TownOfUsPlugin : BasePlugin, IMiraPlugin
     public override void Load()
     {
         ReactorCredits.Register("Town Of Us: Mira", Version, IsDevBuild, ReactorCredits.AlwaysShow);
+        ReactorCredits.Register($"Insane Modifier by GBN", string.Empty, IsDevBuild, ReactorCredits.AlwaysShow);
         LocalizationManager.Register(new TaskProvider());
 
         TouAssets.Initialize();

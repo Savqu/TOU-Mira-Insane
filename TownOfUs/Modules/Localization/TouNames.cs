@@ -246,7 +246,8 @@ public enum TouNames
     SixthSense,
     Sleuth,
     Tiebreaker,
-
+    Insane,
+    
     // Impostor Modifiers
     Disperser,
     Saboteur,
@@ -271,7 +272,6 @@ public enum TouNames
     Scout,
     Taskmaster,
     Torch,
-
     // Other Modifiers
     FirstDeathShield,
     Scatter,

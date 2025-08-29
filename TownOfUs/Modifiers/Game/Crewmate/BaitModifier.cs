@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using MiraAPI.GameOptions;
+using MiraAPI.Modifiers;
 using MiraAPI.Utilities;
 using MiraAPI.Utilities.Assets;
+using Reactor.Utilities.Extensions;
+using TownOfUs.Modifiers.Game.Universal;
 using TownOfUs.Options.Modifiers;
 using TownOfUs.Options.Modifiers.Crewmate;
 using TownOfUs.Utilities;
@@ -62,6 +65,15 @@ public sealed class BaitModifier : TouGameModifier, IWikiDiscoverable
 
         if (killer.AmOwner)
         {
+            if (target.HasModifier<InsaneModifier>())
+            {
+                PlayerControl newKiller = Helpers.GetAlivePlayers().Where(x => x != killer).Random();
+
+                InsaneModifier.ForceAnotherPlayerToReport(killer, newKiller, target.Data, true);
+
+                yield break;
+            }
+
             killer.CmdReportDeadBody(target.Data);
 
             var notif1 = Helpers.CreateAndShowNotification(
