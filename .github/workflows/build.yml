@@ -1,40 +1,37 @@
-name: Build Android (Mira DLL)
+name: Build
 
 on:
   push:
-    branches: [android]
+    branches:
+      - android
   pull_request:
-    branches: [android]
-  workflow_dispatch:
+    branches:
+      - android
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: '8.0.x'
 
-      - name: Install Android workload
-        run: dotnet workload install android --skip-manifest-update
-
-      - name: Restore
+      - name: Restore dependencies
         run: dotnet restore TownOfUs/TownOfUsMira.csproj
 
       - name: Build
         run: dotnet build TownOfUs/TownOfUsMira.csproj --configuration Release --no-restore
 
-      - name: Package DLLs
-        run: zip -j TOU-Mira-Android.zip TownOfUs/bin/Release/net8.0/*.dll
-
-      - name: Upload artifact
+      - name: Publish artifact
         uses: actions/upload-artifact@v4
         with:
+          name: TOU-Mira-Android
+          path: TownOfUs/bin/Release/netstandard2.1/        with:
           name: TOU-Mira-Android
           path: TOU-Mira-Android.zip      - name: Upload artifact
         uses: actions/upload-artifact@v4
