@@ -1,11 +1,10 @@
-name: Build TownOfUs Mira
+name: Build
 
 on:
   push:
-    branches:
-      - main
-      - android
+    branches: [ android ]
   pull_request:
+    branches: [ android ]
 
 jobs:
   build:
@@ -21,20 +20,19 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore TownOfUs.csproj
+        run: dotnet restore TownOfUs/TownOfUsMira.csproj
 
-      - name: Build DLL
-        run: |
-          if [ "${GITHUB_REF##*/}" = "android" ]; then
-            echo "📱 Building for Android..."
-            dotnet build TownOfUs.csproj -c Release -f net8.0-android
-          else
-            echo "💻 Building for PC..."
-            dotnet build TownOfUs.csproj -c Release -f netstandard2.1
-          fi
+      - name: Build
+        run: dotnet build TownOfUs/TownOfUsMira.csproj --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish TownOfUs/TownOfUsMira.csproj --configuration Release --no-build -o out
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
+        with:
+          name: TownOfUsMira
+          path: out/        uses: actions/upload-artifact@v4
         with:
           name: TownOfUs-Mira
           path: |
